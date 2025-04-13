@@ -1,0 +1,97 @@
+фио - @"[^А-Яа-яЁё\s]";
+тел - @"^\+7 \d{3} \d{3}-\d{2}-\d{2}$";
+снилс - @"^\d{3}-\d{3}-\d{3} \d{2}$";
+инн - @"^\d{10}(\d{2})?$";
+карта - @"^\d{2} \d{2} \d{6}$";
+почта - @"^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$";
+---------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Newtonsoft.Json;
+
+namespace AvaloniaApplication1;
+
+public partial class MainWindow : Window
+{
+    string DataFromApi = "";
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
+
+    private void SendTestResult_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var pattern = @"^\d{10}(\d{2})?$";
+        var validationResult = Regex.IsMatch(DataFromApi, pattern);
+        ValidationResultTBlock.Text = validationResult ? "ИНН не содержит запрещенные символы" : "ИНН содержит запрещенные символы";
+        
+        using var doc = WordprocessingDocument.Open(@"TestCase.docx", true);
+        var document = doc.MainDocumentPart.Document;
+
+        if (document.Descendants<Text>().FirstOrDefault(text => text.Text.Contains("Result 1")) != null)
+        {
+            ReplaceTextTestCase("Result 1", validationResult, document);
+        } else if (document.Descendants<Text>().FirstOrDefault(text => text.Text.Contains("Result 2")) != null)
+        {
+            ReplaceTextTestCase("Result 2", validationResult, document);
+        }
+        
+    }
+
+   
+
+    private void ReplaceTextTestCase(string replacedText, bool validationResult, Document document)
+    {
+        foreach (var text in document.Descendants<Text>())
+        {
+            if (text.Text == replacedText)
+                text.Text = text.Text.Replace(replacedText, validationResult ? "Успешно" : "Не успешно");
+            else if (text.Text == replacedText) 
+                text.Text = text.Text.Replace(replacedText, validationResult ? "Успешно" : "Не успешно");
+        }
+    }
+
+
+    private async void GetDataFromApi_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var httpClient = new HttpClient();
+        var content = await httpClient.GetStringAsync("http://localhost:4444/TransferSimulator/inn");
+        var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+        DataFromApi = data["value"];
+        DataFromApiTBlock.Text = DataFromApi;
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------------------
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="600" Height="200" WindowStartupLocation="CenterScreen"
+        x:Class="AvaloniaApplication1.MainWindow"
+        Title="Валидация данных">
+    <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
+        <TextBlock Grid.Column="1" Grid.Row="0" Name="DataFromApiTBlock"
+                   HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Grid.Column="1" Grid.Row="1" Name="ValidationResultTBlock"
+                   HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+        
+        <Button Grid.Row="0" Grid.Column="0" Click="GetDataFromApi_OnClick"
+                HorizontalAlignment="Center" Height="40" Width="210" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Content="Получить данные"></Button>
+        <Button Grid.Row="1" Grid.Column="0" Click="SendTestResult_OnClick"
+                HorizontalAlignment="Center" Height="40" Width="210" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Content="Отправить результат теста"></Button>
+    </Grid>
+</Window>
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+

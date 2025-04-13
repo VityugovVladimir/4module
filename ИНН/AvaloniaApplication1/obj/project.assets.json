@@ -1647,11 +1647,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\C# projects\\AvaloniaApplication1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
+      "projectUniqueName": "D:\\4 module\\ИНН\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
       "projectName": "AvaloniaApplication1",
-      "projectPath": "D:\\C# projects\\AvaloniaApplication1\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
+      "projectPath": "D:\\4 module\\ИНН\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
       "packagesPath": "C:\\Users\\Aldiar\\.nuget\\packages\\",
-      "outputPath": "D:\\C# projects\\AvaloniaApplication1\\AvaloniaApplication1\\obj\\",
+      "outputPath": "D:\\4 module\\ИНН\\AvaloniaApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Aldiar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1662,7 +1662,9 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "D:\\NugetLocal": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.pkg.github.com/andywu188/index.json": {}
       },
       "frameworks": {
         "net8.0": {

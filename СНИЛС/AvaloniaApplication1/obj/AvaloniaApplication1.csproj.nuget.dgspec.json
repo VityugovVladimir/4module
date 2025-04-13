@@ -22,7 +22,9 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "D:\\NugetLocal": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/andywu188/index.json": {}
         },
         "frameworks": {
           "net8.0": {
